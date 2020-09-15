@@ -1,7 +1,7 @@
 WebJSFeed = (function() {
     return {
-        _contexts: {},
-        _web_loaded: false
+        _web_loaded: false,
+        _contexts: {}
     }
 })();
 
