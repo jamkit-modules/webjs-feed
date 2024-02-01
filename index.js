@@ -1,4 +1,4 @@
-var module = (function() {
+const module = (function() {
     var _web_loaded = false, _contexts = {}
 
     function _get_context(name) {
@@ -10,14 +10,16 @@ var module = (function() {
     }
     
     return {  
-        feed: function(name, handler) {
-            var context = _get_context(name);
+        feed: function(name) {
+            return new Promise((resolve, reject) => {
+                const context = _get_context(name);
         
-            if (_web_loaded) {
-                handler(context["next-token"]);
-            } else {
-                context["handler"] = handler;
-            }
+                if (_web_loaded) {
+                    resolve(context["next-token"]);
+                } else {
+                    context["handler"] = resolve;
+                }    
+            });
         },
         
         reset: function() {
@@ -25,7 +27,7 @@ var module = (function() {
         },
         
         on_feed_done: function(name, next_token) {
-            var context = _get_context(name);
+            const context = _get_context(name);
         
             if (context["handler"]) {
                 delete context["handler"];
@@ -37,8 +39,8 @@ var module = (function() {
         on_web_loaded: function() {
             _web_loaded = true;
         
-            Object.keys(_contexts).forEach(function(name) {
-                var context = _get_context(name);
+            Object.keys(_contexts).forEach((name) => {
+                const context = _get_context(name);
                 
                 if (context["handler"]) {
                     context["handler"](context["next-token"]);
